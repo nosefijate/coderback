@@ -1,0 +1,22 @@
+[
+    {
+      "name": "Remera basica",
+      "price": "425",
+      "description": "Remera basica negra",
+      "codebar": "1",
+      "id": 1
+    },
+    {
+      "name": "Cartera",
+      "price": "1500",
+      "description": "Cartera simil cuero",
+      "codebar": "2",
+      "id": 2
+    },
+    {
+      "name": "Campera",
+      "price": "2950",
+      "description": "Campera para nieve",
+      "codebar": "2",
+      "id": 3
+    }  ]  
