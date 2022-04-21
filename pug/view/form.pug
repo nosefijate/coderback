@@ -1,0 +1,17 @@
+html
+head
+    link(rel="stylesheet" href="form.css")
+    title="pug"
+body
+    div
+        a(href="/productos")="Ver productos"
+        h1="Ingrese Producto"
+
+            form(action="/productos" method="POST" class="form-products")
+                p(for="")="Nombre"
+                input(type="text" name="name" class="controls")
+                p(for="")="Precio"
+                input(type="number" name="price" class="controls")
+                p(for="")="ImgUrl"
+                input(type="url" name="thumbnail" class="controls")
+                input(type="submit" class="buttons" value="Agregar")

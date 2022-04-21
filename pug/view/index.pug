@@ -1,0 +1,21 @@
+html
+head
+    link(rel="stylesheet" href="index.css")
+    title="pug"
+body
+    section(class="products products-table")
+        a(href="/")="Agregar Productos"
+        div(class="col-10")
+            h1="Vista de productos"
+
+if productos.length > 0
+    each val in productos
+        div(class="product")
+            div(class="product-img")
+                img(src=val.thumbnail, alt=val.name)
+            div(class="product-content")
+                h3=val.name
+                p(class="product-text price")=val.price
+
+else
+    div(class="aviso")="No hay productos para mostrar"

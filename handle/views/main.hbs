@@ -1,0 +1,29 @@
+<a href="/form">Agregar productos</a>
+<link rel="stylesheet" href="index.css">
+<section class="products products-table">
+		{{#if productos}}
+			<h1>Lista de productos</h1>
+						{{#each productos}}
+						<div class="product">							
+								<div class="product-img">
+									<img src={{this.imgUrl}} alt={{this.title}} WIDTH=64 HEIGHT=64>
+								</div>							
+							<div class="product-content">
+								<h3>
+									{{this.title}}
+									<small>{{this.description}}</small>
+								</h3>
+								<p class="product-text price">${{this.price}}</p>
+								<p class="product-text genre"></p>
+							
+							</div>
+						</div>
+						{{/each}}
+    
+					</table>
+				{{else}}
+					<div class="aviso">
+						No hay productos para mostrar
+					</div>
+				{{/if}}
+</section>

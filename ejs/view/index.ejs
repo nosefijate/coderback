@@ -1,0 +1,41 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <link rel="stylesheet" href="../handle/public/index.css">
+    <title>Document</title>
+</head>
+<body>
+    <body>
+        <a href="/">Agregar Productos</a>
+        <section class="products products-table">
+            <% if(productos.length > 0){ %>
+                <h1>Lista de productos</h1>
+                            <% productos.forEach(function(dato) { %>
+                            <div class="product">
+                                <% if(dato.imgUrl){ %>
+                                    <div class="product-img">
+                                        <img src= <%= dato.imgUrl %> alt=<%= dato.title %> WIDTH=64 HEIGHT=64>
+                                    </div>
+                                <% } %>
+                                <div class="product-content">
+                                    <h3>
+                                        <%= dato.title %>
+                                        <small><%= dato.description %></small>
+                                    </h3>
+                                    <p class="product-text price">$<%= dato.price %></p>
+                                    <p class="product-text genre"></p>
+                                
+                                </div>	
+                                <br>						
+                                <br>						
+                                <hr></hr>
+                            </div>
+                            <% }); %>
+                        </table>
+                    <% } else{ %>
+                        <div class="aviso">
+                            No hay productos para mostrar
+                        </div>
+                    <% } %>
+        </section>
+    </body>
