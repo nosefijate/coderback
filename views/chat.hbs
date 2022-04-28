@@ -1,0 +1,36 @@
+<script src= "/socket.io/socket.io.js"></script>
+<link rel="stylesheet" href="chat.css">
+<form id="formMensajes">
+<input class="email" type="email" id="correo" placeholder="Inserte su correo" required>
+  <br>
+  <br>
+
+<textarea class="mensaje" placeholder="Ingrese su mensaje"></textarea>
+<button type="submit">Enviar</button>
+</form>
+<script>
+    const formMensajes = document.getElementById('formMensajes')
+    formMensajes.addEventListener('submit', e => {
+    e.preventDefault()
+    const ahora = new Date().toLocaleString()
+    const mensaje = {
+        correo: formMensajes[0].value,
+        msj: formMensajes[1].value,
+    }
+    socket.emit('mensajes', mensaje);
+    formMensajes.reset()
+})
+socket.on("mensaje", (mensaje)=>{
+  let inner = ''
+            mensaje.map((message)=>{
+                inner+= `
+                <div class="container">
+  <p><msj>${message.msj}</msj></p>
+  <span class="time-right"><email>${message.correo}</email> [<hora>${message.timestamp}</hora>]</span>
+</div>                
+                `
+            })
+document.getElementById("messages").innerHTML = inner
+})
+        </script>
+<div id="messages"></div

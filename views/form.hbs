@@ -1,0 +1,55 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta http-equiv="X-UA-Compatible" content="IE=edge">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Document</title>
+</head>
+<body>
+    <div>
+          <a href="/productos">Ver Productos</a>
+        <form action="/productos" method="POST" class="form-products">
+        <h4>Agregar productos</h4>
+        <p>Nombre</p>
+        <input
+          class="controls"
+          name="title"
+          type="text"
+          placeholder="Nombre del producto"
+          required
+        />
+        <p>Precio</p>
+        <input
+          class="controls"
+          name="price"
+          type="number"
+          placeholder="Precio del producto"
+          required
+        />
+        <p>Imagen URL</p>
+        <input
+          class="controls"
+          name="imgUrl"
+          type="text"
+          placeholder="Imagen(URL)"
+          required
+        />        
+        <input class="buttons" type="submit" value="Agregar" />
+      </form>
+    </div>
+    <script>
+      const formAgregarProducto = document.getElementById('addProducts')
+      formAgregarProducto.addEventListener('submit', e => {
+      e.preventDefault()
+      const producto = {
+          name: formAgregarProducto[0].value,
+          price: formAgregarProducto[1].value,
+          thumbnail: formAgregarProducto[2].value
+      }
+      socket.emit('update', producto);
+      formAgregarProducto.reset()
+      })
+    </script>
+</body>
+</html>

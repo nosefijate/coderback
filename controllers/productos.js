@@ -1,4 +1,4 @@
-const Contenedor = require('../content.js')
+const Contenedor = require('../server/content.js')
 const prod = new Contenedor('../datos.json')
 
 class ControllerProductos {

@@ -1,0 +1,38 @@
+<a href="/form">Agregar productos</a>
+<link rel="stylesheet" href="index.css">
+<script src= "/socket.io/socket.io.js"></script>
+{{>form}}
+<section class="products products-table">
+		
+			<h1>Lista de productos</h1>
+						
+	<script>
+		const socket = io()
+		socket.on("productos", (show)=>{ 
+			let inner = ""
+        show.map((data) => {
+          inner += `<div class="product">							
+								<div class="product-img">
+									<img src=${data.imgUrl} alt=${data.name} WIDTH=64 HEIGHT=64>
+								</div>							
+							<div class="product-content">
+								<h3>
+									${data.name}
+								</h3>
+								<p class="product-text price">$ ${data.price}</p>
+								<p class="product-text genre"></p>
+								<button>Agregar</button>
+							</div>	
+							<br>						
+							<br>						
+							<hr></hr>
+						</div>`;
+        });
+        document.getElementById("productos").innerHTML = inner;
+        } 
+      ); 
+	</script>
+	
+	<div id="productos"></div>
+</section>
+{{>msj}}
