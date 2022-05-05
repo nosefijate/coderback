@@ -22,6 +22,14 @@ app.engine( "hbs",
 );
 app.set("views", "./views");
 app.set("view engine", "hbs");
+app.use("api/productos", routerProductos);
+app.use("/api/carritos", routerCarritos);
+app.get("/form", (req, res) => {
+  res.render("form",{
+    
+  });
+
+})
 
 io.on('connection', async (socket)=>{
   console.log('Usuario conectado')
