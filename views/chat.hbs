@@ -1,7 +1,7 @@
 <script src= "/socket.io/socket.io.js"></script>
 <link rel="stylesheet" href="chat.css">
 <form id="formMensajes">
-<input class="email" type="email" id="correo" placeholder="Inserte su correo" required>
+<input class="email" id="correo" placeholder="Inserte su nombre de usuario" required>
   <br>
   <br>
 
@@ -14,8 +14,8 @@
     e.preventDefault()
     const ahora = new Date().toLocaleString()
     const mensaje = {
-        correo: formMensajes[0].value,
-        msj: formMensajes[1].value,
+        usuario: formMensajes[0].value,
+        mensaje: formMensajes[1].value,
     }
     socket.emit('mensajes', mensaje);
     formMensajes.reset()
@@ -25,12 +25,12 @@ socket.on("mensaje", (mensaje)=>{
             mensaje.map((message)=>{
                 inner+= `
                 <div class="container">
-  <p><msj>${message.msj}</msj></p>
-  <span class="time-right"><email>${message.correo}</email> [<hora>${message.timestamp}</hora>]</span>
+  <p><msj>${message.mensaje}</msj></p>
+  <span class="time-right"><email>${message.usuario}</email> [<hora>${message.timestamp}</hora>]</span>
 </div>                
                 `
             })
 document.getElementById("messages").innerHTML = inner
 })
         </script>
-<div id="messages"></div
+<div id="messages"></div>

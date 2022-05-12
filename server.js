@@ -1,11 +1,13 @@
+import {configSqlite} from "./config";
 const { Server: HttpServer } = require("http");
 const { Server: IOServer } = require("socket.io");
 const Contenedor = require('./server/content.js')
-const ContMensajes = require('./server/msjs.js')
 const express = require("express");
 const { engine } = require("express-handlebars");
-const msj = new ContMensajes('./usuarios.json')
+const ContMensajes = require('./server/msjs.js')
+const msj = new ContMensajes('configSqlite, "mensajes"')
 const prod = new Contenedor('./datos.json')
+
 const app = express();
 const httpServer = new HttpServer(app)
 const io = new IOServer(httpServer)
@@ -13,6 +15,7 @@ app.use(express.json());
 app.use(express.urlencoded({ extended: true }));
 app.use(express.static("./public"));
 httpServer.listen(8080, () => console.log('Server started on 8080'))
+
 app.engine( "hbs",
   engine({
     extname: ".hbs",
@@ -20,15 +23,14 @@ app.engine( "hbs",
     layoutsDir: __dirname + "/views",
   })
 );
+
 app.set("views", "./views");
 app.set("view engine", "hbs");
-app.use("api/productos", routerProductos);
-app.use("/api/carritos", routerCarritos);
-app.get("/form", (req, res) => {
-  res.render("form",{
-    
-  });
+app.use("/productos", routerProductos);
+app.use("/carritos", routerCarritos);
 
+app.get("/form", (req, res) => {
+  res.render("form")
 })
 
 io.on('connection', async (socket)=>{
@@ -46,9 +48,4 @@ io.on('connection', async (socket)=>{
       await msj.save(data)
       io.sockets.emit("mensaje", await msj.getAll())
     })
-})
-
-app.get("/productos", async (req, res) => {
-  res.render("main", {
-  });
 });

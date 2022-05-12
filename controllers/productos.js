@@ -1,30 +1,33 @@
-const Contenedor = require('../server/content.js')
-const prod = new Contenedor('../datos.json')
+import { Products } from './server/content.js'
+import { configSql2 } from './config.js'
+export const prod = new Products(configSql2,"productos")
 
-class ControllerProductos {
-    show = async (req,res) => {
-        const getProds = await prod.getAll()
-        res.status(200).send(getProds)
-    }
-    showById = async (req,res) => {
-        const { id } = req.params
-        res.status(200).send(await prod.getById(id))
-    }
-    save = async (req,res) => {
-        const { body } = req 
-        await prod.save(body)
-        res.status(200).send('Producto guardado')
-    }
-    update = async (req,res) => {
-        const { id } = req.params
-        const { body } = req
-        await prod.updateById(id, body)
-        res.status(200).send('Producto actualizado')
-    }
-    deleteById = async (req,res) => {
-        const { id } = req.params
-        await prod.deleteById(id)
-        res.status(200).send('Producto eliminado')
-    }
+export class ControllerProducts {
+  show = async (req, res) => {
+    const getProds = await prod.getAll();
+    res.render('main',{
+      getProds
+    })
+  };
+  showById = async (req, res) => {
+    const { id } = req.params;
+    const findById = await prod.getById(id)
+    res.send(findById)
+  };
+  save = async (req, res) => {
+    const { body } = req;
+    await prod.save(body);
+    res.status(200).send('Producto agregado')
+  };
+  updateOne = async (req, res) => {
+    const { id } = req.params;
+    const { body } = req
+    await prod.updateById(id, body);
+    res.sendStatus(200)
+  };
+  deleteOne = async (req, res) => {
+    const { id } = req.params;
+    await prod.deleteById(id);
+    res.sendStatus(200)
+  };
 }
-module.exports = ControllerProductos

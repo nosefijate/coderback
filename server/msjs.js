@@ -1,33 +1,30 @@
-const fs = require("fs")
-class ContMsjs {
-    constructor(archiveName){
-        this.archiveName = archiveName,
-        this.data = []
+import knex from "knex";
+export class Messages {
+    constructor(config, table){
+        this.db = knex(config);
+        this.table = table;
     }
-    async save (mensaje){
-        try{
-            this.data = await this.getAll()
-            if (this.data.length !== 0){  
-                mensaje.timestamp = new Date().toLocaleString()
-                this.data.push(mensaje)
-                fs.promises.writeFile(this.archiveName,JSON.stringify(this.data,null,2))}
-            else{
-                return 
-            }
-        }catch(error){
-            console.log(`Error en escritura: ${error}`)
+    async save(message){
+        try {
+                message.timestamp = new Date().toLocaleString()
+                await this.db.insert(message).from(this.table)
+        } catch (error) {
+            console.log(error) 
         }
     }
     async getAll(){
-        try{
-            const data = await fs.promises.readFile(this.archiveName,"utf-8")
-            return JSON.parse(data)
-        }catch(error){
-            return (`Error en lectura: ${error}`)
+        try {
+            const messages = await this.db.from(this.table).select()
+            return messages
+        } catch (error) {
+            console.log(error)            
         }
     }
     async deleteAll(){
-        await fs.promises.unlink(this.archiveName)
+        try {
+            await this.db.from(this.table).delete()
+        } catch (error) {
+            console.log(error)            
+        }
     }
 }
-module.exports = ContMsjs

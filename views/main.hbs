@@ -1,38 +1,40 @@
 <a href="/form">Agregar productos</a>
 <link rel="stylesheet" href="index.css">
 <script src= "/socket.io/socket.io.js"></script>
-{{>form}}
+
 <section class="products products-table">
-		
+		{{#if getProd}}
 			<h1>Lista de productos</h1>
-						
-	<script>
+		{{#each getProd}}
+			<div class="product">							
+			<div class="product-img">
+							<img src={{this.imgUrl}} alt={{this.name}} WIDTH=64 HEIGHT=64>
+						</div>							
+					<div class="product-content">
+						<h3>
+							{{this.name}}
+							<small>{{this.description}}</small>
+						</h3>
+						<p class="product-text price">${{this.price}}</p>
+						<h5>Codigo: {{this.codebar}}</h4>
+                        <button id="addToCart" saludar >Agregar al carrito</button>
+						<div class="button-minimalist" id="del">X</div>
+					</div>
+					<br>						
+					<hr>
+				</div>
+				{{/each}}
+		{{else}}
+			<div class="aviso">
+				No hay productos para mostrar
+			</div>
+		{{/if}}
+
+</section>				
+
+<script>
 		const socket = io()
-		socket.on("productos", (show)=>{ 
-			let inner = ""
-        show.map((data) => {
-          inner += `<div class="product">							
-								<div class="product-img">
-									<img src=${data.imgUrl} alt=${data.name} WIDTH=64 HEIGHT=64>
-								</div>							
-							<div class="product-content">
-								<h3>
-									${data.name}
-								</h3>
-								<p class="product-text price">$ ${data.price}</p>
-								<p class="product-text genre"></p>
-								<button>Agregar</button>
-							</div>	
-							<br>						
-							<br>						
-							<hr></hr>
-						</div>`;
-        });
-        document.getElementById("productos").innerHTML = inner;
-        } 
-      ); 
-	</script>
-	
-	<div id="productos"></div>
-</section>
+		socket.on()
+</script>
+
 {{>msj}}

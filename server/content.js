@@ -1,105 +1,76 @@
-const fs = require("fs");
-class Contenedor {
-  constructor(archiveName) {
-    (this.archiveName = archiveName),
-    this.data = []
-  }
-
-  async save(product) {    
-    try {
-      if(!fs.existsSync(this.archiveName)){
-        product.id = 1 
-        this.data.push(product)
-        fs.promises.writeFile(
-          this.archiveName,
-          JSON.stringify(this.data, null, 2) 
-        )
-      }else{
-        this.data = await this.getAll() 
-        product.id = this.getMaxId() + 1; 
-        this.data.push(product) 
-        
-        fs.promises.writeFile(
-          this.archiveName,
-          JSON.stringify(this.data, null, 2)
-        )
-      }
-    } catch (error) {
-      console.log(`Error ${error}`)
+import knex from "knex"
+export class Products {
+    constructor(config, table){
+        this.db = knex(config)
+        this.table = table
     }
-  }
-
-  getMaxId() {
-    var maxValue = Number.MIN_VALUE;
-    for (let i = 0; i < this.data.length; i++) {
-      if (this.data[i].id > maxValue) {
-        maxValue = this.data[i].id;
-      }
+    async save(product){
+        try {
+            let exist = await this.db.from(this.table).select().where('name', product.name)
+            if(exist.length === 0){
+                let time = new Date().toLocaleString()
+                product.timestamp = time
+                await this.db.insert(product).from(this.table)
+            }else{
+                await this.db.from(this.table).increment('stock',product.stock).where('name',product.name)
+            }
+        } catch (error) {
+            console.log(error) 
+        }
     }
-    return maxValue
-  }
-
-  async getById(id) {
-    try {
-      const objs = await this.getAll();
-      const findObj = objs.find((obj) => obj.id === Number(id))
-      if(findObj){
-        return findObj
-      }else{
-        return {error: "producto no encontrado"}
-      }
-    } catch (error) {
-      console.log(`Error ${error}`)
+    async getAll(){
+        try {
+            const productos = await this.db.select().from(this.table).select()
+            return productos
+        } catch (error) {
+            console.log(error)            
+        }
     }
-  }
-
-  async getAll() {
-    try {
-      const data = await fs.promises.readFile(this.archiveName, "utf-8")
-      return JSON.parse(data)
-      
-    } catch (error) {
-      return `Error de lectura: ${error}`
+    async getById(id){
+        try {
+            const findById = await this.db.select().from(this.table).select().where("id",id)
+            return findById
+        } catch (error) {
+            console.log(error)            
+        }
     }
-  }
-  async deleteById(id) {
-    const objs = await this.getAll()
-    const findObj = objs.find((obj) => obj.id === id)
-    if (findObj === -1) {
-      console.log(`Error ID inexistente ${id}`)
+    async updateById(id, newValue){
+        try {
+            const { name, thumbnail, price, stock, description, codebar } = newValue
+            if(name){
+                await this.db.from(this.table).update({name}).where('id',id)
+            }
+            if(thumbnail){
+                await this.db.from(this.table).update({thumbnail}).where('id',id)
+            }
+            if(price){
+                await this.db.from(this.table).update({price}).where('id',id)
+            }
+            if(stock){
+                await this.db.from(this.table).update({stock}).where('id',id)
+            }
+            if(description){
+                await this.db.from(this.table).update({description}).where('id',id)
+            }
+            if(codebar){
+                await this.db.from(this.table).update({codebar}).where('id',id)
+            }
+        } catch (error) {
+            console.log(error)            
+        }
     }
-    objs.splice(findObj, 1)
-    try {
-      await fs.promises.writeFile(
-        this.archiveName,
-        JSON.stringify(objs, null, 2)
-      )
-    } catch (error) {
-      console.log(`Error ${error}`)
+    async deleteById(id){
+        try {
+            await this.db.from(this.table).del().where('id',id)
+        } catch (error) {
+            console.log(error)
+        }
     }
-  }
-
-  async updateById(id, newElement){
-    try {
-      await this.deleteById(id);
-      const newProduct = {
-        ...newElement,
-        id: Number(id),
-      }
-
-      const list = await this.getAll()
-      list.push(newProduct)
-      fs.promises.writeFile(this.archiveName, JSON.stringify(list, null, 2))
-
-        
-    } catch (error) {
-        return (error)            
+    async deleteAll(){
+        try {
+            await this.db.from(this.table).del()
+        } catch (error) {
+            console.log(error)
+        }
     }
 }
-  async deleteAll() {
-    await fs.promises.unlink(this.archiveName)
-  }
-}
-
-
-module.exports = Contenedor
